@@ -15,8 +15,12 @@ export function Counter() {
   const [incrementAmount, setIncrementAmount] = useState("2");
 
   if (count) {
-    useEffect(() => {}, []);
+    return <></>
   }
+
+  useEffect(() => {
+    console.log('tesrt')
+  }, []);
 
   return (
     <div>
