@@ -33,8 +33,9 @@ module.exports = {
     "react/no-unescaped-entities": "off",
     "import/no-cycle": [0, { ignoreExternal: true }],
     "prefer-const": "off",
-    '@typescript-eslint/no-var-requires': 0,
+    "@typescript-eslint/no-var-requires": 0,
     "no-use-before-define": "off",
+    "no-duplicate-string": ["error", 5],
     "@typescript-eslint/no-use-before-define": [
       "error",
       { functions: false, classes: false, variables: true },

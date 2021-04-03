@@ -3,21 +3,26 @@ import * as dotenv from "dotenv";
 dotenv.config();
 
 import "./core/db";
-
-const schema = require('./shemas/shema');
-const { graphqlHTTP } = require("express-graphql");
+import { passport } from "./core/passport";
 const cors = require("cors");
 const express = require("express");
-
+import { registerValidations } from "./validations/register";
+import { UserCtrl } from "./controllers/UserController";
 
 const app = express();
 
 app.use(cors());
+app.use(express.static(__dirname));
+app.use(express.json());
 
-app.use("/graphql", graphqlHTTP({
-  schema,
-  graphiql: true
-}));
+
+app.post("/auth/register", registerValidations, UserCtrl.create);
+app.post("/auth/login", passport.authenticate("local"), UserCtrl.afterLogin);
+app.get(
+  "/auth/me",
+  passport.authenticate("jwt", { session: false }),
+  UserCtrl.getUserInfo
+);
 
 
 app.listen(process.env.PORT, (): void => {

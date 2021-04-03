@@ -63,28 +63,6 @@ class UserController {
     }
   }
 
-  async verify(req: any, res: express.Response): Promise<void> {
-    try {
-      const hash = req.query.hash;
-
-      if (!hash) {
-        res.status(400).send();
-        return;
-      }
-
-      await UserModel.updateOne({ confirmHash: hash }, { confirmed: true });
-
-      res.json({
-        status: "success",
-      });
-    } catch (error) {
-      res.status(500).json({
-        status: "error",
-        message: error,
-      });
-    }
-  }
-
   async afterLogin(req: express.Request, res: express.Response): Promise<void> {
     try {
       const user = req.user
