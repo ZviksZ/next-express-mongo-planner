@@ -3,18 +3,17 @@ import * as jwt from "jsonwebtoken";
 
 import { validationResult } from "express-validator";
 import {
-  UserModel,
-  UserModelInterface,
-  UserModelDocumentInterface,
+  UserModel, UserModelDocumentInterface,
+  UserModelInterface
 } from "../models/UserModel";
 import { generateMD5 } from "../utils/generateHash";
-import { sendEmail } from "../utils/sendEmail";
 
 class UserController {
   // eslint-disable-next-line
-  async create(req: express.Request, res: express.Response): Promise<void> {
+  async register(req: express.Request, res: express.Response): Promise<void> {
     try {
       const errors = validationResult(req);
+      console.log(!errors.isEmpty())
       if (!errors.isEmpty()) {
         res.status(400).json({ status: "error", errors: errors.array() });
         return;
@@ -22,39 +21,16 @@ class UserController {
 
       const data: UserModelInterface = {
         email: req.body.email,
-        username: req.body.username,
-        fullname: req.body.fullname,
-        password: generateMD5(req.body.password + process.env.SECRET_KEY),
-        confirmHash: generateMD5(
-          process.env.SECRET_KEY || Math.random().toString()
-        ),
+        name: req.body.name,
+        password: generateMD5(req.body.password + process.env.SECRET_KEY)
       };
 
       const user = await UserModel.create(data);
 
-      sendEmail(
-        {
-          emailFrom: "admin@market.com",
-          emailTo: data.email,
-          subject: "Подтверждение почты React Market",
-          html: `Для того, чтобы подтвердить почту, перейдите <a href="http://localhost:${
-            process.env.PORT || 8888
-          }/auth/verify?hash=${data.confirmHash}">по этой ссылке</a>`,
-        },
-        (err: Error | null) => {
-          if (err) {
-            res.status(500).json({
-              status: "error",
-              message: err,
-            });
-          } else {
-            res.status(201).json({
-              status: "success",
-              data: user,
-            });
-          }
-        }
-      );
+      res.status(201).json({
+        status: "success",
+        data: user,
+      });
     } catch (error) {
       res.status(500).json({
         status: "error",
@@ -63,7 +39,7 @@ class UserController {
     }
   }
 
-  async afterLogin(req: express.Request, res: express.Response): Promise<void> {
+  async login(req: express.Request, res: express.Response): Promise<void> {
     try {
       const user = req.user
         ? (req.user as UserModelDocumentInterface).toJSON()

@@ -1,33 +1,23 @@
 import { model, Schema, Document } from "mongoose";
 
-export interface UserModelInterface {
+export interface UserModelInterface{
   _id?: string;
   email: string;
-  fullname: string;
-  username: string;
+  name: string;
   password: string;
-  confirmHash: string;
-  category?: string;
-  confirmed?: boolean;
-  location?: string;
-  purchases?: [];
+  avatarUrl?: string;
 }
 
 export type UserModelDocumentInterface = UserModelInterface & Document;
 
-const UserSchema = new Schema<UserModelInterface>(
+const UserSchema = new Schema<UserModelDocumentInterface>(
   {
     email: {
       unique: true,
       required: true,
       type: String,
     },
-    fullname: {
-      required: true,
-      type: String,
-    },
-    username: {
-      unique: true,
+    name: {
       required: true,
       type: String,
     },
@@ -35,25 +25,7 @@ const UserSchema = new Schema<UserModelInterface>(
       required: true,
       type: String,
     },
-    confirmHash: {
-      required: true,
-      type: String,
-    },
-    confirmed: {
-      type: Boolean,
-      default: false,
-    },
-    category: {
-      type: String,
-      default: "common",
-    },
-    purchases: {
-      type: [],
-      default: [],
-    },
-    location: String,
-    about: String,
-    website: String,
+    avatarUrl: String,
   },
   {
     timestamps: true,
@@ -63,7 +35,6 @@ const UserSchema = new Schema<UserModelInterface>(
 UserSchema.set("toJSON", {
   transform: function (_, obj) {
     delete obj.password;
-    delete obj.confirmHash;
     return obj;
   },
 });

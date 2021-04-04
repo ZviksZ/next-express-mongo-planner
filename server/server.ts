@@ -16,8 +16,8 @@ app.use(express.static(__dirname));
 app.use(express.json());
 
 
-app.post("/auth/register", registerValidations, UserCtrl.create);
-app.post("/auth/login", passport.authenticate("local"), UserCtrl.afterLogin);
+app.post("/auth/register", registerValidations, UserCtrl.register);
+app.post("/auth/login", passport.authenticate("local"), UserCtrl.login);
 app.get(
   "/auth/me",
   passport.authenticate("jwt", { session: false }),

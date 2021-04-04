@@ -17,7 +17,6 @@ passport.use(
         }
 
         if (
-          user.confirmed &&
           user.password === generateMD5(password + process.env.SECRET_KEY)
         ) {
           done(null, user);
