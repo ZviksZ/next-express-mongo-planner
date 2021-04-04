@@ -52,7 +52,7 @@ passport.use(
   )
 );
 
-passport.serializeUser((user: UserModelInterface, done) => {
+passport.serializeUser<any, any>((user: UserModelInterface, done: any)=> {
   done(null, user?._id);
 });
 
