@@ -9,7 +9,7 @@ export const registerValidations = [
       max: 40,
     })
     .withMessage("Допустимое кол-во символов в почте от 10 до 40."),
-  body("name", "Введите имя")
+  body("username", "Введите имя")
     .isString()
     .isLength({
       min: 2,

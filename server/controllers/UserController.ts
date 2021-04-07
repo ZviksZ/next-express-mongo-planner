@@ -8,7 +8,6 @@ import {
 import { generateMD5 } from "../utils/generateHash";
 
 class UserController {
-  // eslint-disable-next-line
   async register(req: express.Request, res: express.Response): Promise<void> {
     try {
       const errors = validationResult(req);
@@ -61,14 +60,12 @@ class UserController {
     }
   }
 
-  async getUserInfo(
-    req: express.Request,
-    res: express.Response
-  ): Promise<void> {
+  async getUserInfo(req: express.Request,res: express.Response): Promise<void> {
     try {
       const user = req.user
         ? (req.user as UserModelDocumentInterface).toJSON()
         : undefined;
+
       res.json({
         status: "success",
         data: user

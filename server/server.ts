@@ -14,7 +14,7 @@ const app = express();
 app.use(cors());
 app.use(express.static(__dirname));
 app.use(express.json());
-
+app.use(passport.initialize());
 
 app.post("/auth/register", registerValidations, UserCtrl.register);
 app.post("/auth/login", passport.authenticate("local"), UserCtrl.login);
