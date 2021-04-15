@@ -26,6 +26,7 @@ const UserSchema = new Schema(
       type: String,
     },
     avatarUrl: String,
+    tasks: [{ type: Schema.Types.ObjectId, ref: 'Task' }],
   },
   {
     timestamps: true,

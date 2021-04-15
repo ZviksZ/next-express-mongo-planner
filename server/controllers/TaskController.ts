@@ -1,21 +1,20 @@
 import * as express from "express";
-
-import { ProductModel } from "../models/ProductModel";
 import { isValidObjectId } from "../utils/isValidObjectId";
+import { TaskModel }       from "../models/TaskModel";
 /*
 import { validationResult } from "express-validator";
 import { TweetModel } from "../models/TweetModel";
 import { isValidObjectId } from "../utils/isValidObjectId";
 import { UserModelInterface } from "../models/UserModel";*/
 
-class ProductController {
-  async index(_: any, res: express.Response): Promise<void> {
+class TaskController {
+  async getTasks(_: any, res: express.Response): Promise<void> {
     try {
-      const products = await ProductModel.find({}).exec();
+      const tasks = await TaskModel.find({}).populate('user', 'username').exec();
 
       res.json({
         status: "success",
-        data: products,
+        data: tasks,
       });
     } catch (error) {
       res.status(500).json({
@@ -28,13 +27,13 @@ class ProductController {
   async create(req: any, res: express.Response): Promise<void> {
     try {
 
-      const product = new ProductModel(req.body);
+      const task = new TaskModel(req.body);
 
-      await product.save();
+      await task.save();
 
       res.json({
         status: "success",
-        data: product,
+        data: task,
       });
     } catch (error) {
       res.status(500).json({
@@ -44,25 +43,25 @@ class ProductController {
     }
   }
 
-  async show(req: express.Request, res: express.Response): Promise<void> {
+  async getOne(req: express.Request, res: express.Response): Promise<void> {
     try {
-      const productId = req.params.id;
+      const taskId = req.params.id;
 
-      if (!isValidObjectId(productId)) {
+      if (!isValidObjectId(taskId)) {
         res.status(400).send();
         return;
       }
 
-      const product = await ProductModel.findById(productId);
+      const task = await TaskModel.findById(taskId);
 
-      if (!product) {
+      if (!task) {
         res.status(404).send();
         return;
       }
 
       res.json({
         status: "success",
-        data: product,
+        data: task,
       });
     } catch (error) {
       res.status(500).json({
@@ -74,14 +73,14 @@ class ProductController {
 
   async delete(req: express.Request, res: express.Response): Promise<void> {
     try {
-      const productId = req.params.id;
+      const taskId = req.params.id;
 
-      if (!isValidObjectId(productId)) {
+      if (!isValidObjectId(taskId)) {
         res.status(400).send();
         return;
       }
 
-      await ProductModel.findByIdAndDelete(productId);
+      await TaskModel.findByIdAndDelete(taskId);
 
       res.json({
         status: "success",
@@ -96,15 +95,15 @@ class ProductController {
 
   async update(req: any, res: express.Response): Promise<void> {
     try {
-      const productId = req.params.id;
-      const productUpdated = req.body;
+      const taskId = req.params.id;
+      const taskUpdated = req.body;
 
-      if (!isValidObjectId(productId)) {
+      if (!isValidObjectId(taskId)) {
         res.status(400).send();
         return;
       }
 
-      await ProductModel.updateOne({ _id: productId }, { ...productUpdated });
+      await TaskModel.updateOne({ _id: taskId }, { ...taskUpdated });
 
       res.json({
         status: "success",
@@ -118,4 +117,4 @@ class ProductController {
   }
 }
 
-export const ProductCtrl = new ProductController();
+export const TaskCtrl = new TaskController();
