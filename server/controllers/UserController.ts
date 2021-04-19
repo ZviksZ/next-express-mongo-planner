@@ -68,8 +68,12 @@ class UserController {
 
       res.json({
         status: "success",
-        data: user
-      });
+        data: {
+          ...user,
+          token: jwt.sign({ data: req.user }, process.env.SECRET_KEY || "123", {
+            expiresIn: "30 days"
+          })
+      }});
     } catch (error) {
       res.status(500).json({
         status: "error",

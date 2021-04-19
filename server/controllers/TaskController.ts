@@ -8,9 +8,12 @@ import { isValidObjectId } from "../utils/isValidObjectId";
 import { UserModelInterface } from "../models/UserModel";*/
 
 class TaskController {
-  async getTasks(_: any, res: express.Response): Promise<void> {
+  async getTasks(req: any, res: express.Response): Promise<void> {
     try {
-      const tasks = await TaskModel.find({}).populate('user', 'username').exec();
+      const requestTasks = req.user ? {
+        user: req.user._id
+      } : {}
+      const tasks = await TaskModel.find(requestTasks).populate('user', 'username').exec();
 
       res.json({
         status: "success",
@@ -27,7 +30,7 @@ class TaskController {
   async create(req: any, res: express.Response): Promise<void> {
     try {
 
-      const task = new TaskModel(req.body);
+      const task = new TaskModel({...req.body, user: req.user._id});
 
       await task.save();
 

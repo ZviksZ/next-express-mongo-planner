@@ -1,16 +1,18 @@
-import * as dotenv             from "dotenv";
+import * as dotenv from "dotenv";
 
 dotenv.config();
 
 import "./core/db";
-import { passport }            from "./core/passport";
+import { passport } from "./core/passport";
 const cors = require("cors");
 const express = require("express");
 const bodyParser = require("body-parser");
 import { registerValidations } from "./validations/register";
-import { UserCtrl }            from "./controllers/UserController";
-import { TaskCtrl }            from "./controllers/TaskController";
+import { UserCtrl } from "./controllers/UserController";
+import { TaskCtrl } from "./controllers/TaskController";
 
+const swaggerUi = require("swagger-ui-express");
+import { swaggerDocument } from "./swagger";
 const app = express();
 
 app.use(cors());
@@ -29,12 +31,33 @@ app.get(
   UserCtrl.getUserInfo
 );
 
-app.get("/tasks", TaskCtrl.getTasks)
-app.get("/tasks/:id", TaskCtrl.getOne)
-app.post("/tasks", TaskCtrl.create)
-app.delete("/tasks/:id", TaskCtrl.delete)
-app.patch("/tasks/:id", TaskCtrl.update)
+app.get(
+  "/tasks",
+  passport.authenticate("jwt", { session: false }),
+  TaskCtrl.getTasks
+);
+app.get(
+  "/tasks/:id",
+  passport.authenticate("jwt", { session: false }),
+  TaskCtrl.getOne
+);
+app.post(
+  "/tasks",
+  passport.authenticate("jwt", { session: false }),
+  TaskCtrl.create
+);
+app.delete(
+  "/tasks/:id",
+  passport.authenticate("jwt", { session: false }),
+  TaskCtrl.delete
+);
+app.patch(
+  "/tasks/:id",
+  passport.authenticate("jwt", { session: false }),
+  TaskCtrl.update
+);
 
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 app.listen(process.env.PORT, (): void => {
   console.log(`Server is running on port ${process.env.PORT}`);
