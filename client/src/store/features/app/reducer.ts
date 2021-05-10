@@ -1,31 +1,26 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { GlobalMessageInterface, AppStateInterface } from "./types";
+import { createSlice, PayloadAction }                               from "@reduxjs/toolkit";
+import { GlobalMessageInterface, AppStateInterface, UserInterface } from "./types";
 
 
 const initialState: AppStateInterface = {
-  globalMessage: null
+  globalMessage: null,
+  user: null
 };
 
 export const appReducer = createSlice({
-  name: "app",
+  name: "@app",
   initialState,
   reducers: {
     setGlobalMessage: (state, action: PayloadAction<GlobalMessageInterface | null>) => {
       state.globalMessage = action.payload;
-    }
-   /* increment: state => {
-      state.value += 1;
     },
-    decrement: state => {
-      state.value -= 1;
+    setUser: (state, action: PayloadAction<UserInterface | null>) => {
+      state.user = action.payload;
     },
-    incrementByAmount: (state, action: PayloadAction<number>) => {
-      state.value += action.payload;
-    }*/
   }
 });
 
-export const { setGlobalMessage } = appReducer.actions;
+export const { setGlobalMessage, setUser } = appReducer.actions;
 
 
 export default appReducer.reducer;
